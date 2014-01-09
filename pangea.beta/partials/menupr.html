@@ -1,0 +1,8 @@
+﻿<div class="menu">
+    <article ng-repeat="item in menu" ng-click="navigation.navigate(item.navigateVref);">
+        <div class="nav">
+            {{item.title}}</br>
+            {{item.bid}} - {{item.ask}}
+        </div>
+    </article>
+</div>

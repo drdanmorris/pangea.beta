@@ -1,0 +1,307 @@
+﻿
+
+.reset {
+    margin:0;
+    padding:0;
+}
+
+.flex {
+   display: -webkit-box; 
+   display: -moz-box;    
+   display: -ms-flexbox;  
+   display: -webkit-flex; 
+   display: flex;
+}
+
+.flexRatio(@ratio: 1) {
+   -moz-box-flex: @ratio; 
+   -webkit-box-flex: @ratio; 
+   -ms-flex: @ratio;
+   /*box-flex: @ratio;*/
+   flex: @ratio;
+}
+
+/* box-align: start|end|center|baseline|stretch; */
+.centerV {
+   -webkit-box-align: center;  
+   -moz-box-align: center;
+   -ms-flex-align: center; 
+   -webkit-align-items: center;
+   align-items: center;
+}
+
+/* box-pack: start|end|center|justify; */
+.alignH(@pos: center) {
+   -webkit-box-pack: @pos; 
+   -moz-box-pack: @pos; 
+   -ms-flex-pack: @pos; 
+   -webkit-justify-content: @pos;
+   justify-content: @pos;
+}
+
+.centerH {
+  .alignH(center);
+}
+
+.rightH {
+  .alignH(end);
+}
+
+.leftH {
+  .alignH(flex-start);
+}
+
+.center {
+    .flex;
+    .centerH;
+    .centerV;
+}
+
+
+body {
+    .reset;
+    font-family: Arial, helvetica, sans-serif;
+    font-size:12px;
+    margin-left:2px;
+}
+
+h1 {
+    .reset;
+}
+ul {
+    .reset;
+}
+
+@bgColor: #ccc;
+@borderColor: #aaa;
+@tableRowHeight: 42px;
+@tableCellTextColor: #000;
+@toolbarBgColor: #ccc;
+@toolbarHeight: 42px;
+
+
+.border(@col: #aaa) {
+    border:solid 1px @col;
+}
+
+ul > li {
+    list-style-image:none;
+    display:inline-block;
+}
+
+section#app {
+    position:absolute;
+    height:480px;
+    width:320px;
+    background-color:#eaeaea;
+}
+
+
+/* PageSlider*/
+.stageRight {
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+}
+.stageLeft {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+}
+.stageCenter {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.slidecontainer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 43px;
+    left: 0;
+    overflow: hidden;
+
+    .slide {
+    }
+
+        .slide.ng-enter, .slide.ng-leave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -webkit-transition: 0.25s linear all;
+            transition: 0.25s linear all;
+        }
+
+        .slide.ng-enter {
+            .stageRight;
+        }
+
+            .slide.ng-enter.ng-enter-active {
+                .stageCenter;
+            }
+
+        .slide.ng-leave {
+        }
+
+            .slide.ng-leave.ng-leave-active {
+                .stageLeft;
+            }
+}
+
+#app.back {
+    .slide.ng-enter { 
+        .stageLeft;
+    }    
+    .slide.ng-enter.ng-enter-active {
+    .stageCenter;
+    } 
+    .slide.ng-leave { }       
+    .slide.ng-leave.ng-leave-active {
+        .stageRight;
+    } 
+}
+
+
+
+div.loading {
+    display:block;
+}
+div.loaded {
+    display:none;
+}
+
+
+/* iOS */
+@iosToolbarBgColor: #f7f7f7;
+@iosToolbarHeight: 42px;
+@iosToolbarButtonColor: #006eef;
+@iosBorderColor:#e5e5e5;
+@iosTextColor: #121212;
+
+
+html.ios {
+    color: @iosTextColor;
+    font-family: -apple-system-font;
+    font-size: 17px/21px;
+
+    .iosBorderBottom {
+        border-bottom: solid 1px @iosBorderColor;
+    }
+
+    section#toolbar {
+        background-color: @iosToolbarBgColor;
+        height: @iosToolbarHeight;
+        .iosBorderBottom;
+    }
+
+    .toolbar-item {
+        background-color: darken(@toolbarBgColor, 15%);
+        .flexRatio;
+        height: @toolbarHeight - 8;
+        line-height: @toolbarHeight - 8;
+
+        a:link, a:visited, a:hover {
+            text-decoration: none;
+            color: @iosToolbarButtonColor;
+        }
+    }
+
+    section#toolbar {
+        height: @iosToolbarHeight;
+        .flex;
+        background-color: @iosToolbarBgColor;
+        .centerV;
+
+        .toolbar-left-item {
+            .toolbar-item;
+            padding-left: 18px;
+            background: url(../images/ios/left.svg) no-repeat left 50%;
+            font-size: 0.9em;
+            white-space: nowrap;
+            /*visibility:hidden;*/
+        }
+
+        h1 {
+            font-size: 1.2em;
+            .flexRatio(3);
+            .center;
+        }
+
+        .toolbar-right-item {
+            .toolbar-item;
+            text-align: center;
+            padding-right: 3px;
+            visibility: hidden;
+        }
+    }
+
+    section#tabbar {
+        position: absolute;
+        bottom: 0;
+        width: 320px; /* TODO */
+        background-color: @bgColor;
+
+        ul {
+            .flex;
+            .centerV;
+        }
+
+        li {
+            .border;
+            .flexRatio;
+            .center;
+            font-size: 0.8em;
+            height: 30px;
+            border-right: none;
+        }
+
+            li:last-child {
+                .border;
+            }
+
+            li.selected {
+                background-color: lighten(@bgColor, 10%);
+            }
+
+        a:link, a:visited, a:hover {
+            text-decoration: none;
+            color: black;
+            font-size: 0.8em;
+        }
+    }
+
+    div.list-view {
+
+        article {
+            border-bottom: solid 1px @borderColor;
+            height: 36px;
+            background-color: white;
+
+            h1 {
+                font-size: 0.9em;
+            }
+        }
+    }
+
+
+    div.menu {
+
+        article {
+            height: @tableRowHeight;
+            .iosBorderBottom;
+            background-color: #fff;
+
+            > div {
+                /*width:100%;*/
+                height: @tableRowHeight;
+                .flex;
+                .centerV;
+                padding-left: 15px;
+            }
+
+                > div.nav {
+                    background: #fff url(images/ios/right.svg) no-repeat right 50%;
+                }
+            
+        }
+    }
+}

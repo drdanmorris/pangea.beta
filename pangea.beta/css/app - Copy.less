@@ -1,0 +1,335 @@
+﻿.reset {
+  margin: 0;
+  padding: 0;
+}
+.flex {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+/* box-align: start|end|center|baseline|stretch; */
+.centerV {
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+/* box-pack: start|end|center|justify; */
+.centerH {
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.rightH {
+    -webkit-box-pack: end;
+    -moz-box-pack: end;
+    -ms-flex-pack: end;
+    -webkit-justify-content: end;
+    justify-content: end;
+}
+.leftH {
+    -webkit-box-pack: flex-start;
+    -moz-box-pack: flex-start;
+    -ms-flex-pack: flex-start;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+}
+.center {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, helvetica, sans-serif;
+    font-size: 12px;
+    margin-left: 2px;
+}
+h1 {
+    margin: 0;
+    padding: 0;
+}
+ul {
+    margin: 0;
+    padding: 0;
+}
+ul > li {
+    list-style-image: none;
+    display: inline-block;
+}
+section#app {
+    position: absolute;
+    height: 480px;
+    width: 320px;
+    background-color: #eaeaea;
+}
+
+div.loading {
+    display:block;
+}
+div.loaded {
+    display:none;
+}
+
+/* PageSlider*/
+.slidecontainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 43px;
+  left: 0;
+  overflow: hidden;
+}
+.slide { }
+.slide.ng-enter, .slide.ng-leave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transition:0.25s linear all;
+    transition:0.25s linear all;
+}
+
+.slide.ng-enter { 
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+}    
+.slide.ng-enter.ng-enter-active {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+} 
+.slide.ng-leave { }       
+.slide.ng-leave.ng-leave-active {
+    -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+} 
+
+
+
+
+
+
+/* iOS */
+html.ios {
+  color: #121212;
+  font-family: -apple-system-font;
+  font-size: 0.8095238095238095px;
+}
+html.ios .iosBorderBottom {
+  border-bottom: solid 1px #e5e5e5;
+}
+html.ios section#toolbar {
+  background-color: #f7f7f7;
+  height: 42px;
+  border-bottom: solid 1px #e5e5e5;
+}
+html.ios .toolbar-item {
+  background-color: #a6a6a6;
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  /*box-flex: @ratio;*/
+  flex: 1;
+  height: 34px;
+  line-height: 34px;
+}
+html.ios .toolbar-item a:link,
+html.ios .toolbar-item a:visited,
+html.ios .toolbar-item a:hover {
+  text-decoration: none;
+  color: #006eef;
+}
+html.ios section#toolbar {
+  height: 42px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  background-color: #f7f7f7;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+html.ios section#toolbar .toolbar-left-item {
+  background-color: #a6a6a6;
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  /*box-flex: @ratio;*/
+  flex: 1;
+  height: 34px;
+  line-height: 34px;
+  padding-left: 18px;
+  background: url(../images/ios/left.svg) no-repeat left 50%;
+  font-size: 0.9em;
+  white-space: nowrap;
+  /*visibility:hidden;*/
+}
+html.ios section#toolbar .toolbar-left-item a:link,
+html.ios section#toolbar .toolbar-left-item a:visited,
+html.ios section#toolbar .toolbar-left-item a:hover {
+  text-decoration: none;
+  color: #006eef;
+}
+html.ios section#toolbar h1 {
+  font-size: 1.2em;
+  -moz-box-flex: 3;
+  -webkit-box-flex: 3;
+  -ms-flex: 3;
+  /*box-flex: @ratio;*/
+  flex: 3;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+html.ios section#toolbar .toolbar-right-item {
+  background-color: #a6a6a6;
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  /*box-flex: @ratio;*/
+  flex: 1;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  padding-right: 3px;
+  visibility: hidden;
+}
+html.ios section#toolbar .toolbar-right-item a:link,
+html.ios section#toolbar .toolbar-right-item a:visited,
+html.ios section#toolbar .toolbar-right-item a:hover {
+  text-decoration: none;
+  color: #006eef;
+}
+html.ios section#tabbar {
+  position: absolute;
+  bottom: 0;
+  width: 320px;
+  /* TODO */
+  background-color: #cccccc;
+}
+html.ios section#tabbar ul {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+html.ios section#tabbar li {
+  border: solid 1px #aaaaaa;
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  /*box-flex: @ratio;*/
+  flex: 1;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  font-size: 0.8em;
+  height: 30px;
+  border-right: none;
+}
+html.ios section#tabbar li:last-child {
+  border: solid 1px #aaaaaa;
+}
+html.ios section#tabbar li.selected {
+  background-color: #e6e6e6;
+}
+html.ios section#tabbar a:link,
+html.ios section#tabbar a:visited,
+html.ios section#tabbar a:hover {
+  text-decoration: none;
+  color: black;
+  font-size: 0.8em;
+}
+html.ios div.list-view article {
+  border-bottom: solid 1px #aaaaaa;
+  height: 36px;
+  background-color: white;
+}
+html.ios div.list-view article h1 {
+  font-size: 0.9em;
+}
+html.ios div.menu article {
+  height: 42px;
+  border-bottom: solid 1px #e5e5e5;
+  background-color: #fff;
+}
+html.ios div.menu article a:link,
+html.ios div.menu article a:visited,
+html.ios div.menu article a:hover {
+  text-decoration: none;
+  color: #121212;
+  width: 100%;
+}
+html.ios div.menu article > a > div {
+  /*width:100%;*/
+  height: 42px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  padding-left: 15px;
+}
+html.ios div.menu article > div.nav {
+  background: #ffffff url(../images/ios/right.svg) no-repeat right 50%;
+}
