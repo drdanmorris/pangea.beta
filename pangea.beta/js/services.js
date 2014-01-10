@@ -19,7 +19,6 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
         , wasConnected: false
         , connecting: false
         , _connection: null
-        , sendMsgId: 1  // uid for outgoing messages
         , connectCount: 0  // number of times connection established
         , reconnectCount: 0  // number of concurrent reconnection attempts
         , sendQueue: []
@@ -29,26 +28,9 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
             this.reconnect();
         }
         , send: function (msg) {
-            this.sendMsgId += 1;
-            msg.requestId = this.sendMsgId;
-            var queuedMsg = {
-                uid: msg.requestId,
-                raw: JSON.stringify(msg),
-                msg: msg,
-                sendCount: 0
-            };
-            this.sendQueue.push(queuedMsg);
-            console.log('sending message' + queuedMsg.raw);
-            this.processSendQueue();
-        }
-        , processSendQueue: function () {
-            if (this.isConnected) {
-                for (var i = 0; i < this.sendQueue.length; i++) {
-                    var queuedMsg = this.sendQueue[i];
-                    queuedMsg.sendCount += 1;
-                    this._connection.send(queuedMsg.raw);
-                }
-            }
+            if(typeof msg == 'object') msg = JSON.stringify(msg);
+            if (this.isConnected) this._connection.send(msg);
+            else this.sendQueue.push(msg);
         }
         , reconnect: function (delayMs) {
             delayMs = delayMs || 0;
@@ -56,7 +38,9 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
             this.reconnectCount += 1;
             setTimeout(function () {
                 my.connect().then(function(conn) {
-                    my.processSendQueue();
+                    while(my.sendQueue.length) {
+                        my.send(my.sendQueue.pop());
+                    }
                 });
             }, delayMs)
         }
@@ -91,10 +75,8 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
             this._connection = connection;
             this.reconnectCount = 0;
             console.log('socket opened');  // verbose
-
-
-            connection.send('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqabcdefghijklmnopqrstuvwxyzhhhhhh');
-
+            // test websocket hybi payload length logic
+            //connection.send('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqabcdefghijklmnopqrstuvwxyzhhhhhh');
             defer.resolve(this._connection);
         }
         , onSocketClose: function () {
@@ -111,29 +93,8 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
             console.log('socket error');  // verbose
             //if (!this.wasConnected) this.reconnect();
         }
-        , handleSendReceipt: function (uid) {
-            this.removeMessageFromSendQueue(uid);
-        }
-        , removeMessageFromSendQueue: function (uid) {
-            for (var i = 0; i < this.sendQueue.length; i++) {
-                var msg = this.sendQueue[i];
-                if (msg.uid == uid) {
-                    this.sendQueue = this.sendQueue.splice(i, 1);
-                    break;
-                }
-            }
-        }
         , processIncomingMessage: function (msg) {
-            var uid = msg.responseId || 0;
-            if (uid > 0) {
-                this.handleSendReceipt(uid);
-            }
-            
-            if (this.incomingMsgCallback && this.incomingMsgCallback(msg)) return;
-
-            $rootScope.$apply(function () {  // do we need to apply ?
-                $rootScope.$broadcast('pushIncomingMessage', msg);
-            });
+            this.incomingMsgCallback(msg);
         }
     };
     return socket;
@@ -143,6 +104,7 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
 services.factory('PushService', ['$q', 'Config', '$rootScope', 'SocketService', function ($q, config, $rootScope, socket) {
     var push = {
         initialised: false
+        , requestId: 1
         , init: function () {
             if (!this.initialised) {
                 socket.start(this.handleIncomingMsg.bind(this));
@@ -150,23 +112,70 @@ services.factory('PushService', ['$q', 'Config', '$rootScope', 'SocketService', 
         }
         , handleIncomingMsg: function (msg) {
             if (msg.isInitial) {
-                var ref = msg.view.vref;
-                var pending = this.pendingSubscriptions[ref];
-                if (pending) {
-                    pending.defer.resolve(msg.view);
-                    this.pendingSubscriptions[ref] = null;
+                if(msg.view && msg.view.vref) {
+                    this.handleInitialVref(msg.view, msg.responseId);
                 }
-                return true;
+                else if(msg.data && msg.data.dref) {
+                    this.handleInitialDref(msg.data, msg.responseId);
+                }
             }
-            return false;
+            else {
+                // todo - notify update
+            }
+            // $rootScope.$apply(function () {  // do we need to apply ?
+            //     $rootScope.$broadcast('pushIncomingMessage', msg);
+            // });
         }
-        , pendingSubscriptions: {}
+        , fulfilRequest: function(view, responseId) {
+            this.pending['view' + responseId].defer.resolve(view);
+            this.pending['view' + responseId] = null;
+        }
+        , findDrefContainer: function(obj, dref) {
+            for(var prop in obj) {
+                if(prop === 'dref' && obj[prop] === dref) return obj;
+                else if(typeof obj[prop] === 'object') {
+                    return this.findDrefContainer(obj[prop], dref);
+                }
+            }
+            return null;
+        }
+        , handleInitialVref: function(view, responseId) {
+            if(view.drefs){
+                this.pending['view' + responseId].view = view;
+                this.pending['view' + responseId].remainingDrefs = 0;  // bitmap of remaining drefs
+
+                // need to wait for data to arrive
+                for(var i = 0; i < view.drefs.length; i++ ){
+                    var dref = view.drefs[i];
+                    var drefMask = 1 << i;
+                    this.pending['view' + responseId].remainingDrefs |= drefMask;
+                    var my = this;
+                    this.pending[dref + '_' + responseId] = function(data) {
+                        var container = my.findDrefContainer(view, dref);
+                        angular.extend(container, data);
+                        my.pending['view' + responseId].remainingDrefs ^= drefMask;
+                    };
+                }
+            }
+            else {
+                this.fulfilRequest(view, responseId);
+            }
+        }   
+        , handleInitialDref: function(data, responseId) {
+            var dref = data.dref;
+            this.pending[dref + '_' + responseId](data);
+            if(!this.pending['view' + responseId].remainingDrefs) 
+                this.fulfilRequest(this.pending['view' + responseId].view, responseId);
+            
+        }   
+        , pending: {}
         , subscribe: function (options) {
             options = angular.extend({ vref: null }, options);
             var ref = options.vref,
                 defer = $q.defer(),
-                request = angular.extend({ cmd: 'subscribe' }, options);
-            this.pendingSubscriptions[ref] = { defer: defer };
+                requestId = this.requestId++,
+                request = angular.extend({ cmd: 'subscribe', requestId: requestId }, options);
+            this.pending['view' + requestId] = { defer: defer };
             socket.send(request);
             return defer.promise;
         }
