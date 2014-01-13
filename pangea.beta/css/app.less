@@ -84,6 +84,27 @@ ul {
     border:solid 1px @col;
 }
 
+.borderT(@col: #aaa) {
+    .border(@col);
+    border-left:none;
+    border-right:none;
+    border-bottom:none;
+}
+.borderB(@col: #aaa) {
+    .border(@col);
+    border-left:none;
+    border-right:none;
+    border-top:none;
+}
+.borderTB(@col: #aaa) {
+    .border(@col);
+    border-left:none;
+    border-right:none;
+}
+
+
+
+
 ul > li {
     list-style-image:none;
     display:inline-block;
@@ -113,10 +134,10 @@ section#app {
 .slidecontainer {
     position: absolute;
     width: 100%;
-    height: 100%;
+    height: 400px; /* TODO */
     top: 43px;
     left: 0;
-    overflow: hidden;
+    overflow: auto;
 
     .slide {
     }
@@ -170,6 +191,66 @@ div.loaded {
 }
 
 
+@borderColor:#a5a5a5;
+
+/*Rounded Corners*/
+.round-top-left(@radius: 6px) {
+    border-top-left-radius: @radius;
+}
+.round-top-right(@radius: 6px) {
+    border-top-right-radius: @radius;
+}
+
+
+
+/* User Controls */
+.tradeBanner {
+    height:40px;
+    .flex;
+    padding:5px;
+    /*border-bottom:solid 1px @borderColor;*/
+
+    
+
+    div.icon {
+        height:40px;
+        .border(@borderColor);
+        .flexRatio;
+    }
+    div.icon.left {
+        .round-top-left;
+    }
+    div.icon.right {
+        .round-top-right;
+    }
+    div.title {
+        height:40px;
+        .flex;
+        .flexRatio(5);
+        .centerH;
+        .centerV;
+        .borderTB(@borderColor);
+        background-color: white;
+    }
+
+}
+
+.icon{
+    background: url(images/trade-icons.jpg) no-repeat 0 0;
+}
+.icon.icon1 {
+    background-position: -2px 0;
+}
+.icon.icon2 {
+    background-position: -45px 0;
+}
+.icon.icon3 {
+    background-position: -88px 0;
+}
+.icon.icon4 {
+    background-position: -130px 0;
+}
+
 /* iOS */
 @iosToolbarBgColor: #f7f7f7;
 @iosToolbarHeight: 42px;
@@ -214,7 +295,7 @@ html.ios {
         .toolbar-left-item {
             .toolbar-item;
             padding-left: 18px;
-            background: url(../images/ios/left.svg) no-repeat left 50%;
+            background: url(images/ios/left.svg) no-repeat left 50%;
             font-size: 0.9em;
             white-space: nowrap;
             /*visibility:hidden;*/
@@ -304,4 +385,9 @@ html.ios {
             
         }
     }
+
+
 }
+
+
+

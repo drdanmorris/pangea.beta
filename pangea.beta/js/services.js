@@ -1,5 +1,6 @@
 'use strict';
 
+
 var services = angular.module('myApp.services', []);
 services.value('version', '0.1');
 
@@ -28,8 +29,11 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
             this.reconnect();
         }
         , send: function (msg) {
-            if(typeof msg == 'object') msg = JSON.stringify(msg);
-            if (this.isConnected) this._connection.send(msg);
+            if(typeof msg === 'object') msg = JSON.stringify(msg);
+            if (this.isConnected) {
+                console.log('outgoing message: ' + msg);
+                this._connection.send(msg);
+            }
             else this.sendQueue.push(msg);
         }
         , reconnect: function (delayMs) {
@@ -105,6 +109,7 @@ services.factory('PushService', ['$q', 'Config', '$rootScope', 'SocketService', 
     var push = {
         initialised: false
         , requestId: 1
+        , delegate: null
         , init: function () {
             if (!this.initialised) {
                 socket.start(this.handleIncomingMsg.bind(this));
@@ -120,7 +125,7 @@ services.factory('PushService', ['$q', 'Config', '$rootScope', 'SocketService', 
                 }
             }
             else {
-                // todo - notify update
+                if(this.delegate) this.delegate(msg.data);
             }
             // $rootScope.$apply(function () {  // do we need to apply ?
             //     $rootScope.$broadcast('pushIncomingMessage', msg);
@@ -132,28 +137,47 @@ services.factory('PushService', ['$q', 'Config', '$rootScope', 'SocketService', 
         }
         , findDrefContainer: function(obj, dref) {
             for(var prop in obj) {
-                if(prop === 'dref' && obj[prop] === dref) return obj;
+                
+                // debugging*******
+                if(prop === 'dref') {
+                    var test = obj[prop];
+                    console.log(test);
+                }
+
+                if(prop === 'dref' && obj[prop] === dref) return obj;  //found
                 else if(typeof obj[prop] === 'object') {
-                    return this.findDrefContainer(obj[prop], dref);
+                    var container = this.findDrefContainer(obj[prop], dref);
+                    if(container) 
+                        return container;
                 }
             }
             return null;
         }
         , handleInitialVref: function(view, responseId) {
             if(view.drefs){
-                this.pending['view' + responseId].view = view;
-                this.pending['view' + responseId].remainingDrefs = 0;  // bitmap of remaining drefs
-
+                var pendingView = this.pending['view' + responseId];
+                pendingView.view = view;
+                pendingView.remainingDrefs = view.drefs;  // todo - copy
+                
                 // need to wait for data to arrive
                 for(var i = 0; i < view.drefs.length; i++ ){
                     var dref = view.drefs[i];
-                    var drefMask = 1 << i;
-                    this.pending['view' + responseId].remainingDrefs |= drefMask;
                     var my = this;
-                    this.pending[dref + '_' + responseId] = function(data) {
-                        var container = my.findDrefContainer(view, dref);
-                        angular.extend(container, data);
-                        my.pending['view' + responseId].remainingDrefs ^= drefMask;
+                    this.pending[dref + '_' + responseId] = function(pendingView, data, dref) {
+                        var container = my.findDrefContainer(pendingView.view, dref);
+                        if(container) {
+                            angular.extend(container, data);
+                            for(var j = 0; j < pendingView.remainingDrefs.length; j++) {
+                                if(pendingView.remainingDrefs[j] === dref) {
+                                    pendingView.remainingDrefs.splice(j, 1);
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                            throw 'Unable to find data reference container for ' + dref;
+
+                        return pendingView.remainingDrefs.length === 0;  // all pending drefs processed
                     };
                 }
             }
@@ -163,19 +187,21 @@ services.factory('PushService', ['$q', 'Config', '$rootScope', 'SocketService', 
         }   
         , handleInitialDref: function(data, responseId) {
             var dref = data.dref;
-            this.pending[dref + '_' + responseId](data);
-            if(!this.pending['view' + responseId].remainingDrefs) 
+            var pendingView = this.pending['view' + responseId];
+            var fnAllDrefsProcessed = this.pending[dref + '_' + responseId];
+            if(fnAllDrefsProcessed(pendingView, data, dref)) {
                 this.fulfilRequest(this.pending['view' + responseId].view, responseId);
-            
+            } 
         }   
         , pending: {}
         , subscribe: function (options) {
-            options = angular.extend({ vref: null }, options);
+            options = angular.extend({ vref: null, delegate: null }, options);
             var ref = options.vref,
                 defer = $q.defer(),
                 requestId = this.requestId++,
                 request = angular.extend({ cmd: 'subscribe', requestId: requestId }, options);
             this.pending['view' + requestId] = { defer: defer };
+            this.delegate = options.delegate;
             socket.send(request);
             return defer.promise;
         }
