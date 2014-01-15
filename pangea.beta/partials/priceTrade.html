@@ -1,9 +1,17 @@
-﻿<trade-banner></trade-banner>
-<panel>
-
-	<button-bid>
-
-</panel>
-
+﻿<my-trade-banner></my-trade-banner>
+<my-view-body>
+	<my-sell-buy-btn></my-sell-buy-btn>
+	<my-row>
+		<my-numeric-up-down ctrl="sizeUpDownCtrl"></my-numeric-up-down>
+		<label>GBP</label>
+	</my-row>
+	<my-row>
+		<my-numeric-up-down ctrl="stopUpDownCtrl"></my-numeric-up-down>
+		<div class="tradeFormStopDetail">
+			<div>Level: {{bStop}} / {{aStop}}</div>
+			<div>Amount: $-10.00</div>
+		</div>
+	</my-row>
+</my-view-body>
 
 

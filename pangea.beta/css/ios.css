@@ -1,0 +1,4 @@
+section#main {
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}

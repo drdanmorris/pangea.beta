@@ -22,7 +22,7 @@ myApp.config(['$routeProvider', function($routeProvider) {
         .when('/:tab/menupr/:subtype/:id', { templateUrl: 'partials/menupr.html', controller: 'PriceMenuController' })
         .when('/:tab/account/:subtype/:id', { templateUrl: 'partials/account.html', controller: 'AccountController' })
         .when('/:tab/price/trade/:dref', { templateUrl: 'partials/priceTrade.html', controller: 'PriceTradeController' })
-        .otherwise({ redirectTo: '0/menu/home/0' })
+        .otherwise({ redirectTo: '0/menu/usr/0' })
     ;
 }]);
 

@@ -3,31 +3,31 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!-- ios -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <!-- /ios -->
     <title>Pangea.Beta</title>
     <link rel="stylesheet" href="css/app.css" />
+    <!-- dev convenience to avoid scrollbars in main section on desktop -->
+    <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" href="css/ios.css" />
 </head>
 <body>
-
     <section id="app" ng-controller="AppController" class="{{navigation.appClass}}">
-
         <section id="toolbar">
-            <div id="toolbar-left-item" ng-click="navigation.back()">Back</div>
+            <div id="toolbar-left-item" ng-click="navigation.goBack()">{{navigation.back}}</div>
             <h1>{{navigation.title}}</h1>
             <div id="toolbar-right-item"></div>
         </section>
-
         <section id="main" class="slidecontainer">
             <div ng-view class="slide"></div>
         </section>
-
         <section id="tabbar">
             <ul>
                 <li ng-repeat="tab in navigation.tabs" ng-class="(navigation.tabIndex == $index) ? 'selected' : ''" ng-click="onTabSelected($index)">{{tab.title}}</li>
             </ul>
         </section>
-
     </section>
-
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular/angular-route.js"></script>
     <script src="lib/angular/angular-animate.js"></script>
@@ -37,6 +37,5 @@
     <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>
     <script src="lib/underscore.js"></script>
-    <!--<script src="js/play.js"></script>-->
 </body>
 </html>

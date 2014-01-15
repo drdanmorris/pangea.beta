@@ -1,35 +1,5 @@
 'use strict';
 
-
-//var push = {
-
-//    val: 0,
-//    cb: null,
-//    started: false,
-
-//    subscribe: function (cb) {
-//        this.cb = cb;
-//        this.start();
-//    },
-
-//    start: function() {
-//        if (this.started) return;
-//        this.started = true;
-//        this.update();
-//    },
-
-//    update: function () {
-//        var my = this;
-//        setTimeout(function () {
-//            my.val++;
-//            if(my.cb) my.cb(my.val);
-//            my.update();
-//        }, 1000);
-//    }
-
-//};
-
-
 var controllers = angular.module('myApp.controllers', []);
 
 controllers.controller('AppController', ['$scope', '$rootScope', 'ViewService', '$location',
@@ -37,9 +7,7 @@ controllers.controller('AppController', ['$scope', '$rootScope', 'ViewService', 
         $scope.navigation = viewsvc;
 
         $scope.onTabSelected = function (idx) {
-            viewsvc.tabIndex = idx;
-            var tab = $scope.tabs[idx];
-            $location.path(tab.vref);
+            viewsvc.navigateTab(idx);
         }
     }
 
@@ -115,25 +83,90 @@ controllers.controller('AccountController', ['$scope',
     }
 ]);
 
+
+
 controllers.controller('PriceTradeController', ['$scope', '$rootScope', '$routeParams', 'ViewService', 'PushService',
     function ($scope, $rootScope, $routeParams, viewsvc, push) {
-        var vref = 'price/trade/'+ $routeParams.dref;
+        var vref = 'price/trade/'+ $routeParams.dref,
+            viewdata = null  // set from push result
+        ;
         var onUpdate = function(msg) {
-            $scope.a = msg.a;
-            $scope.b = msg.b;
-            $scope.$apply();
+            $scope.a = splitPriceMajorMinor(msg.a);
+            $scope.b = splitPriceMajorMinor(msg.b);
+            updateTradeInfo(true);
         };
+
+        var splitPriceMajorMinor = function(price) {
+            var parts = price.split('.');
+            return {
+                major: parts[0],
+                minor: parts[1],
+                raw: price,
+                value: parseFloat(price)
+            };
+        };
+
+        var updateTradeInfo = function(apply) {
+            $scope.bStop = $scope.b.value + $scope.stopUpDownCtrl.value;
+            $scope.aStop = $scope.a.value + $scope.stopUpDownCtrl.value;
+            if(apply) $scope.$apply();
+        };
+
         $scope.navigation = viewsvc;
         $scope.loading = true;
+
+
+        $scope.sizeUpDownCtrl = {
+            value: 0,
+            downEnabled: false,
+            upEnabled: true,
+            title:'Size',
+            up: function() {
+                this.value += 10;
+                this.downEnabled = true;
+            },
+            down: function() {
+                if(this.value > 0) {
+                    this.value -= 10;
+                    if(this.value == 0) this.downEnabled = false;
+                }
+            }
+        };
+
+        $scope.stopUpDownCtrl = {
+            value: 0,
+            downEnabled: false,
+            upEnabled: true,
+            title:'Stop',
+            up: function() {
+                this.value += 10;
+                this.downEnabled = true;
+                updateTradeInfo(true);
+            },
+            down: function() {
+                if(this.value > 0) {
+                    this.value -= 10;
+                    if(this.value == 0) this.downEnabled = false;
+                    updateTradeInfo(true);
+                }
+            }
+        };
+
         push.subscribe({ vref:vref, delegate:onUpdate }).then(function (view) {
+            viewdata = view;
             $scope.title = view.item.title;
-            $scope.a = view.item.a;
-            $scope.b = view.item.b;
+            $scope.a = splitPriceMajorMinor(view.item.a);
+            $scope.b = splitPriceMajorMinor(view.item.b);
             $scope.icon1 = view.icon1;
             $scope.icon2 = view.icon2;
             viewsvc.title = "Trade";
             $scope.loading = false;
+            updateTradeInfo();
         });
+
+
+
+        
     }
 ]);
 

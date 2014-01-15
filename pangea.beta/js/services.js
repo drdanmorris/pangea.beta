@@ -31,7 +31,7 @@ services.factory('SocketService', ['$q', 'Config', '$rootScope',  function ($q, 
         , send: function (msg) {
             if(typeof msg === 'object') msg = JSON.stringify(msg);
             if (this.isConnected) {
-                console.log('outgoing message: ' + msg);
+                //console.log('outgoing message: ' + msg);
                 this._connection.send(msg);
             }
             else this.sendQueue.push(msg);
@@ -137,13 +137,6 @@ services.factory('PushService', ['$q', 'Config', '$rootScope', 'SocketService', 
         }
         , findDrefContainer: function(obj, dref) {
             for(var prop in obj) {
-                
-                // debugging*******
-                if(prop === 'dref') {
-                    var test = obj[prop];
-                    console.log(test);
-                }
-
                 if(prop === 'dref' && obj[prop] === dref) return obj;  //found
                 else if(typeof obj[prop] === 'object') {
                     var container = this.findDrefContainer(obj[prop], dref);
@@ -232,7 +225,7 @@ services.service('ViewService', ['$rootScope', '$location', function ($rootScope
         this.history = [];
         this.id = options.id;
         this.title = options.title;
-        this.vref = options.vref;
+        this.vref = new Vref(options.vref);
     };
     Tab.prototype.getVref = function() {
         if (this.history.length > 0) return this.history[this.history.length - 1];
@@ -251,29 +244,40 @@ services.service('ViewService', ['$rootScope', '$location', function ($rootScope
         ],
         tab: null,
         backVref: null,
-        appClass: 'normal'
+        back: '',
+        appClass: 'forward',
+        // getVrefForTab: function (tabIndex) {
+        //     this.tabIndex = tabIndex;
+        //     this.tab = this.tabs[this.tabIndex];
+        // },
+        navigateTab: function(idx) {
+            this.tabIndex = idx;
+            this.tab = this.tabs[idx];
+            this.appClass = 'tab';
+            $location.path(this.tab.vref.raw);
+        },
+        navigate: function (vref) {
+            this.appClass = 'forward';
+            this.doNavigate(vref, 'forward');
+        },
+        goBack: function () {
+            var vref = this.tab.history.pop();
+            this.appClass = 'back';
+            this.doNavigate(vref, 'back');
+        },
+        doNavigate: function (vref, dir) {
+            if (angular.isString(vref)) vref = new Vref(vref, this.tabIndex);
+            if(dir === 'forward')  {
+                this.tab.history.push(this.tab.vref);
+                this.back = 'Back'
+            }
+            else if(!this.tab.history.length) {
+                this.back = '';
+            }
+            this.tab.vref = vref;
+            $location.path(vref.raw);
+        }
     };
     viewsvc.tab = viewsvc.tabs[0];
-    viewsvc.getVrefForTab = function (tabIndex) {
-        this.tabIndex = tabIndex;
-        this.tab = this.tabs[this.tabIndex];
-    };
-    viewsvc.navigate = function (vref) {
-        this.appClass = 'normal';
-        this.doNavigate(vref);
-    };
-    viewsvc.back = function () {
-        var vref = this.tab.history.pop();
-        this.appClass = 'back';
-        this.doNavigate(vref);
-    };
-    viewsvc.doNavigate = function (vref) {
-        if (angular.isString(vref)) vref = new Vref(vref, this.tabIndex);
-        this.tab.history.push(this.tab.vref);
-        this.tab.vref = vref;
-        $location.path(vref.raw);
-    };
-    
     return viewsvc;
-
 }]);

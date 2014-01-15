@@ -1,0 +1,10 @@
+<div class="numericUpDown">
+	<div class="title">{{ctrl.title}}:</div>
+	<div class="ctrl">
+		<div class="down {{ctrl.downEnabled}}" ng-click="ctrl.down();">-</div>
+		<div><input type="text" ng-model="ctrl.value" /></div>
+		<div class="up {{ctrl.upEnabled}}" ng-click="ctrl.up();">+</div>
+		<my-clear></my-clear>
+	</div>
+	<my-clear></my-clear>
+</div>
