@@ -88,15 +88,21 @@ controllers.controller('AccountController', ['$scope',
 controllers.controller('PriceTradeController', ['$scope', '$rootScope', '$routeParams', 'ViewService', 'PushService',
     function ($scope, $rootScope, $routeParams, viewsvc, push) {
         var vref = 'price/trade/'+ $routeParams.dref,
-            viewdata = null  // set from push result
+            viewdata = null,  // set from push result
+            dp = 2,
+            first = true
         ;
         var onUpdate = function(msg) {
-            $scope.a = splitPriceMajorMinor(msg.a);
-            $scope.b = splitPriceMajorMinor(msg.b);
-            updateTradeInfo(true);
+            if(!first) return;  // stop applying subsequent updates
+            $scope.buy = splitPriceMajorMinor(msg.a);
+            $scope.sell = splitPriceMajorMinor(msg.b);
+            //updateStopInfo();
+            //updateLimitInfo();
+            if(!first) $scope.$apply();
+            first = false;
         };
-
         var splitPriceMajorMinor = function(price) {
+            price = price || '0.0';
             var parts = price.split('.');
             return {
                 major: parts[0],
@@ -105,63 +111,65 @@ controllers.controller('PriceTradeController', ['$scope', '$rootScope', '$routeP
                 value: parseFloat(price)
             };
         };
-
-        var updateTradeInfo = function(apply) {
-            $scope.bStop = $scope.b.value + $scope.stopUpDownCtrl.value;
-            $scope.aStop = $scope.a.value + $scope.stopUpDownCtrl.value;
-            if(apply) $scope.$apply();
+        var updateStopInfo = function() {
+            $scope.stopUpDownCtrl.levelAmount.numerator = $scope.sellStop = ($scope.sell.value + $scope.stopUpDownCtrl.value).toFixed(dp);
+            $scope.stopUpDownCtrl.levelAmount.denominator = $scope.buyStop = ($scope.buy.value - $scope.stopUpDownCtrl.value).toFixed(dp);
+            $scope.stopUpDownCtrl.levelAmount.value = -$scope.stopUpDownCtrl.value;
+        };
+        var updateLimitInfo = function() {
+            $scope.limitUpDownCtrl.levelAmount.numerator = $scope.sellLimit = ($scope.sell.value - $scope.limitUpDownCtrl.value).toFixed(dp);
+            $scope.limitUpDownCtrl.levelAmount.denominator = $scope.buyLimit = ($scope.buy.value + $scope.limitUpDownCtrl.value).toFixed(dp);
+            $scope.limitUpDownCtrl.levelAmount.value = $scope.limitUpDownCtrl.value;
         };
 
         $scope.navigation = viewsvc;
         $scope.loading = true;
-
-
-        $scope.sizeUpDownCtrl = {
-            value: 0,
-            downEnabled: false,
-            upEnabled: true,
-            title:'Size',
-            up: function() {
-                this.value += 10;
-                this.downEnabled = true;
+        $scope.sizeUpDownCtrl = new numericUpDownControl({
+            title: 'Size',
+            increment: 1
+        });
+        $scope.stopUpDownCtrl = new numericUpDownControl({
+            title: 'Stop',
+            increment: 10,
+            onUp: function() {
+                updateStopInfo();
             },
-            down: function() {
-                if(this.value > 0) {
-                    this.value -= 10;
-                    if(this.value == 0) this.downEnabled = false;
-                }
-            }
-        };
-
-        $scope.stopUpDownCtrl = {
-            value: 0,
-            downEnabled: false,
-            upEnabled: true,
-            title:'Stop',
-            up: function() {
-                this.value += 10;
-                this.downEnabled = true;
-                updateTradeInfo(true);
+            onDown: function() {
+                updateStopInfo();
             },
-            down: function() {
-                if(this.value > 0) {
-                    this.value -= 10;
-                    if(this.value == 0) this.downEnabled = false;
-                    updateTradeInfo(true);
-                }
+            levelAmount : {
+                numerator:0,
+                denominator:0
             }
-        };
+        });
+        $scope.limitUpDownCtrl = new numericUpDownControl({
+            title: 'Limit',
+            increment: 1,
+            onUp: function() {
+                updateLimitInfo();
+            },
+            onDown: function() {
+                updateLimitInfo();
+            },
+            levelAmount : {
+                numerator:0,
+                denominator:0
+            }
+        });
+        $scope.guaranteed = {
+            position:'off'
+        }
 
+        
         push.subscribe({ vref:vref, delegate:onUpdate }).then(function (view) {
+            // return;
             viewdata = view;
+            onUpdate(view.item);
             $scope.title = view.item.title;
-            $scope.a = splitPriceMajorMinor(view.item.a);
-            $scope.b = splitPriceMajorMinor(view.item.b);
             $scope.icon1 = view.icon1;
             $scope.icon2 = view.icon2;
             viewsvc.title = "Trade";
             $scope.loading = false;
-            updateTradeInfo();
         });
 
 

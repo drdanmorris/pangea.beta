@@ -1,17 +1,35 @@
 ﻿<my-trade-banner></my-trade-banner>
 <my-view-body>
+	
 	<my-sell-buy-btn></my-sell-buy-btn>
+
 	<my-row>
 		<my-numeric-up-down ctrl="sizeUpDownCtrl"></my-numeric-up-down>
-		<label>GBP</label>
-	</my-row>
-	<my-row>
-		<my-numeric-up-down ctrl="stopUpDownCtrl"></my-numeric-up-down>
-		<div class="tradeFormStopDetail">
-			<div>Level: {{bStop}} / {{aStop}}</div>
-			<div>Amount: $-10.00</div>
+		<div class="numericUpDownCtrlDetail">
+			<label>GBP</label>
 		</div>
 	</my-row>
+
+	<my-row>
+		<my-numeric-up-down ctrl="stopUpDownCtrl"></my-numeric-up-down>
+		<my-level-amount ctrl="stopUpDownCtrl"></my-level-amount>
+		<my-clear></my-clear>
+		<label class="note forNumericUpDownCtrl">(min: 2.23 pts)</label>
+	</my-row>
+
+	<my-row>
+		<div class="forNumericUpDownCtrl">
+			<label class="heading">Guaranteed</label><br/>
+			<label class="note">(Extra spread: +/-2.23 pts)</label>
+		</div>
+		<div class="col2">
+			<my-switch ctrl="guaranteed"></my-switch>
+		</div>
+	</my-row>
+
+	<my-row>
+		<my-numeric-up-down ctrl="limitUpDownCtrl"></my-numeric-up-down>
+		<my-level-amount ctrl="limitUpDownCtrl"></my-level-amount>
+	</my-row>
+
 </my-view-body>
-
-

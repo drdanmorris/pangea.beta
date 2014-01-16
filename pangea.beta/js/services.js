@@ -226,6 +226,7 @@ services.service('ViewService', ['$rootScope', '$location', function ($rootScope
         this.id = options.id;
         this.title = options.title;
         this.vref = new Vref(options.vref);
+        this.icon = options.icon;
     };
     Tab.prototype.getVref = function() {
         if (this.history.length > 0) return this.history[this.history.length - 1];
@@ -236,11 +237,11 @@ services.service('ViewService', ['$rootScope', '$location', function ($rootScope
         title: 'title from Svc',
         tabIndex: 0,
         tabs: [
-            new Tab({ id: 0, title: 'Watchlists', vref: '0/menu/usr/0' }),
-            new Tab({ id: 1, title: 'Browse', vref: '1/menu/home/0' }),
-            new Tab({ id: 2, title: 'Account', vref: '2/acct/home/0' }),
-            new Tab({ id: 3, title: 'Positions', vref: '3/pos/home/0' }),
-            new Tab({ id: 4, title: 'Help', vref: '4/help/home/0' })
+            new Tab({ id: 0, title: 'Watchlist', vref: '0/menu/usr/0', icon: 'icon1' }),
+            new Tab({ id: 1, title: 'Browse', vref: '1/menu/home/0', icon: 'icon1' }),
+            new Tab({ id: 2, title: 'Account', vref: '2/acct/home/0', icon: 'icon1' }),
+            new Tab({ id: 3, title: 'Position', vref: '3/pos/home/0', icon: 'icon1' }),
+            new Tab({ id: 4, title: 'Help', vref: '4/help/home/0', icon: 'icon1' })
         ],
         tab: null,
         backVref: null,

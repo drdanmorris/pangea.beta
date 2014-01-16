@@ -14,25 +14,18 @@
 </head>
 <body>
     <section id="app" ng-controller="AppController" class="{{navigation.appClass}}">
-        <section id="toolbar">
-            <div id="toolbar-left-item" ng-click="navigation.goBack()">{{navigation.back}}</div>
-            <h1>{{navigation.title}}</h1>
-            <div id="toolbar-right-item"></div>
-        </section>
+        <my-tool-bar></my-tool-bar>
         <section id="main" class="slidecontainer">
             <div ng-view class="slide"></div>
         </section>
-        <section id="tabbar">
-            <ul>
-                <li ng-repeat="tab in navigation.tabs" ng-class="(navigation.tabIndex == $index) ? 'selected' : ''" ng-click="onTabSelected($index)">{{tab.title}}</li>
-            </ul>
-        </section>
+        <my-tab-bar></my-tab-bar>
     </section>
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular/angular-route.js"></script>
     <script src="lib/angular/angular-animate.js"></script>
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
+    <script src="js/userControls.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>

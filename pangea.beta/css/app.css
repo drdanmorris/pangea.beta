@@ -22,12 +22,26 @@ ul {
 Constants
 ==================================================================================
 */
-/*Inputs*/
+/* 
+==================================================================================
+Master View Sections
+==================================================================================
+*/
+
+section#app {
+  height: 480px;
+  width: 320px;
+  background-color: #eaeaea;
+}
+section#app section#main {
+  height: 388px;
+}
 /* 
 ==================================================================================
 Prevent Default
 ==================================================================================
 */
+
 .noselect {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -38,6 +52,7 @@ Prevent Default
 Alignment
 ==================================================================================
 */
+
 .flex {
   display: -webkit-box;
   display: -moz-box;
@@ -45,21 +60,8 @@ Alignment
   /*display: -webkit-flex; */
   display: flex;
 }
-.flexH {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  /*display: -webkit-flex; */
-  display: flex;
-}
-.flexH div {
-  -moz-box-flex: 1;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  /*box-flex: @ratio;*/
-  flex: 1;
-}
 /* box-align: start|end|center|baseline|stretch; */
+
 .centerV {
   -webkit-box-align: center;
   -moz-box-align: center;
@@ -68,11 +70,11 @@ Alignment
   align-items: center;
 }
 .bottomV {
-  -webkit-box-align: baseline;
-  -moz-box-align: baseline;
-  -ms-flex-align: baseline;
-  -webkit-align-items: baseline;
-  align-items: baseline;
+  -webkit-box-align: end;
+  -moz-box-align: end;
+  -ms-flex-align: end;
+  -webkit-align-items: end;
+  align-items: end;
 }
 /* box-pack: start|end|center|justify; */
 .centerH {
@@ -120,15 +122,22 @@ Borders
 */
 /* 
 ==================================================================================
-Master View Sections
+Common Text
 ==================================================================================
 */
-section#app {
-  /*position:absolute;*/
-  height: 480px;
-  /*width:320px;*/
-  background-color: #eaeaea;
+
+span.sell {
+  color: #c83933;
 }
+span.buy {
+  color: #00838b;
+}
+/* 
+==================================================================================
+Common List
+==================================================================================
+*/
+
 ul > li {
   list-style-image: none;
   display: inline-block;
@@ -138,6 +147,7 @@ ul > li {
 Page Slider
 ==================================================================================
 */
+
 .stageRight {
   -webkit-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
@@ -151,19 +161,12 @@ Page Slider
   transform: translate3d(0, 0, 0);
 }
 .slidecontainer {
-  position: absolute;
-  width: 100%;
-  height: 400px;
-  /* TODO */
-  top: 43px;
-  left: 0;
-  /*overflow: auto;*/
+  position: relative;
 }
 .slidecontainer .slide.ng-enter,
 .slidecontainer .slide.ng-leave {
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   -webkit-transition: 0.25s linear all;
@@ -208,6 +211,9 @@ div.loading {
 div.loaded {
   display: none;
 }
+.hide {
+  visibility: hidden;
+}
 /* 
 ==================================================================================
 Round Corners
@@ -218,50 +224,34 @@ Round Corners
 User Controls
 ==================================================================================
 */
+
+/*--Trade View Banner--------------------------------------------------------*/
+
 .tradeBanner {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  /*display: -webkit-flex; */
-  display: flex;
   padding: 0;
   margin: 5px;
   margin-bottom: 0;
-  /*border-bottom:solid 1px @borderColor;*/
 }
 .tradeBanner div.icon {
   height: 40px;
   width: 40px;
   border: solid 1px #a5a5a5;
+  background-color: white;
 }
 .tradeBanner div.icon.left {
   border-top-left-radius: 6px;
+  float: left;
 }
 .tradeBanner div.icon.right {
   border-top-right-radius: 6px;
+  float: right;
 }
 .tradeBanner div.title {
   height: 40px;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  /*display: -webkit-flex; */
-  display: flex;
-  -moz-box-flex: 1;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  /*box-flex: @ratio;*/
-  flex: 1;
-  -webkit-box-pack: center;
-  -moz-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
+  line-height: 40px;
+  width: 226px;
+  float: left;
+  text-align: center;
   border: solid 1px #a5a5a5;
   border-left: none;
   border-right: none;
@@ -280,32 +270,16 @@ User Controls
   margin: 5px;
   border: solid 1px #aaaaaa;
   border-radius: 6px;
-  background-color: #ffffff;
+  background-color: white;
 }
+/*--Sell Buy Button--------------------------------------------------------*/
+
 .sellBuyBtn {
   margin-top: 10px;
   margin-bottom: 20px;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  /*display: -webkit-flex; */
-  display: flex;
-  -webkit-box-pack: center;
-  -moz-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-  /*    margin-left:10px;
-    margin-right:10px;*/
 }
 .sellBuyBtn .inner {
-  width: 280px;
-  /*.border;*/
+  margin: 0 8px 0 8px;
 }
 .sellBuyBtn .inner .btn.trade {
   height: 55px;
@@ -318,7 +292,6 @@ User Controls
 .sellBuyBtn .inner .btn.trade .btnLabel {
   position: relative;
   width: 46px;
-  /*.border;*/
   text-align: center;
   height: 17px;
   border-bottom-left-radius: 6px;
@@ -340,8 +313,6 @@ User Controls
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
-  /*.bottomV;*/
-  /*.border;*/
   position: relative;
   top: 5px;
 }
@@ -354,7 +325,6 @@ User Controls
 .sellBuyBtn .inner .btn.trade h3 {
   position: relative;
   top: -18px;
-  /*left:-30px;*/
   font-size: 0.8em;
   font-weight: normal;
 }
@@ -377,10 +347,13 @@ User Controls
 .clear {
   clear: both;
 }
+/*--Numeric Up/Down control--------------------------------------------------------*/
+
 .numericUpDown {
   /*display:inline-block;*/
   margin-right: 5px;
   /*.border;*/
+
 }
 .numericUpDown > div {
   float: left;
@@ -433,44 +406,91 @@ User Controls
 .numericUpDown .ctrl .down.false {
   background-color: #d0d0d0;
 }
+/*--Form row--------------------------------------------------------*/
+
 .row {
-  height: 30px;
-  margin: 0 0 20px 0;
+  min-height: 30px;
+  margin: 0 0 10px 0;
   /*.border;*/
+
 }
-.row > * {
+.row > div {
   float: left;
 }
-.row > label {
-  /*.border;*/
-  margin: 13px 0 0 0;
+.row .note {
+  font-size: 0.8em;
+}
+.row .heading {
+  font-size: 1.2em;
+}
+.row .forNumericUpDownCtrl {
+  margin-left: 48px;
+}
+.row .col2 {
+  margin-left: 10px;
+}
+/*--On/off switch--------------------------------------------------------*/
+
+.switch {
+  height: 30px;
+  width: 50px;
+  border: solid 1px #aaaaaa;
+  border-radius: 20px;
+}
+.switch .button {
+  height: 28px;
+  width: 28px;
+  border: solid 1px #aaaaaa;
+  border-radius: 15px;
+}
+.switch.on {
+  background-color: #41d86c;
+}
+.switch.on .button {
+  background-color: white;
+  float: right;
+}
+.switch.off {
+  background-color: white;
+}
+.switch.off .button {
+  background-color: white;
+  box-shadow: 1px 1px 1px #999999;
 }
 /* 
 ==================================================================================
 Views
 ==================================================================================
 */
-.tradeFormStopDetail {
+
+.numericUpDownCtrlDetail {
   font-size: 0.8em;
+  height: 30px;
+  /*.border;*/
+
+}
+.numericUpDownCtrlDetail > label {
+  line-height: 38px;
 }
 /* 
 ==================================================================================
 Trade Icons
 ==================================================================================
 */
-.icon {
-  background: url(images/trade-icons.jpg) no-repeat 0 0;
+
+.trade.icon {
+  background: url(images/trade-icons.jpg) no-repeat -5px 0;
 }
-.icon.icon1 {
-  background-position: -2px 0;
+.trade.icon.icon1 {
+  background-position: -5px 0;
 }
-.icon.icon2 {
-  background-position: -45px 0;
+.trade.icon.icon2 {
+  background-position: -47px 0;
 }
-.icon.icon3 {
+.trade.icon.icon3 {
   background-position: -88px 0;
 }
-.icon.icon4 {
+.trade.icon.icon4 {
   background-position: -130px 0;
 }
 /* 
@@ -478,31 +498,32 @@ Trade Icons
 Android
 ==================================================================================
 */
+
 /* 
 ==================================================================================
 WP8
 ==================================================================================
 */
+
 /* 
 ==================================================================================
 iOS
 ==================================================================================
 */
+
 html.ios {
   color: #121212;
   font-family: -apple-system-font;
-  font-size: 0.8095238095238095px;
+  font-size: 0.80952381;
+  /*--Tool Bar--------------------------------------------------------*/
+
+  /*--Tab Bar--------------------------------------------------------*/
+
+  /*--Menu--------------------------------------------------------*/
+
 }
 html.ios section#main {
   overflow: auto;
-}
-html.ios .iosBorderBottom {
-  border-bottom: solid 1px #e5e5e5;
-}
-html.ios section#toolbar {
-  background-color: #f7f7f7;
-  height: 42px;
-  border-bottom: solid 1px #e5e5e5;
 }
 html.ios .toolbar-item {
   background-color: #a6a6a6;
@@ -522,19 +543,23 @@ html.ios .toolbar-item a:hover {
 }
 html.ios section#toolbar {
   height: 42px;
+  background-color: #f7f7f7;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   /*display: -webkit-flex; */
   display: flex;
-  background-color: #f7f7f7;
   -webkit-box-align: center;
   -moz-box-align: center;
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
+  border: solid 1px #aaaaaa;
+  border-left: none;
+  border-right: none;
+  border-top: none;
 }
-html.ios section#toolbar .toolbar-left-item {
+html.ios section#toolbar #toolbar-left-item {
   background-color: #a6a6a6;
   -moz-box-flex: 1;
   -webkit-box-flex: 1;
@@ -545,13 +570,13 @@ html.ios section#toolbar .toolbar-left-item {
   line-height: 34px;
   padding-left: 18px;
   background: url(images/ios/left.svg) no-repeat left 50%;
-  font-size: 0.9em;
+  font-size: 1.0em;
   white-space: nowrap;
-  /*visibility:hidden;*/
+  color: #007aff;
 }
-html.ios section#toolbar .toolbar-left-item a:link,
-html.ios section#toolbar .toolbar-left-item a:visited,
-html.ios section#toolbar .toolbar-left-item a:hover {
+html.ios section#toolbar #toolbar-left-item a:link,
+html.ios section#toolbar #toolbar-left-item a:visited,
+html.ios section#toolbar #toolbar-left-item a:hover {
   text-decoration: none;
   color: #006eef;
 }
@@ -578,7 +603,7 @@ html.ios section#toolbar h1 {
   -webkit-align-items: center;
   align-items: center;
 }
-html.ios section#toolbar .toolbar-right-item {
+html.ios section#toolbar #toolbar-right-item {
   background-color: #a6a6a6;
   -moz-box-flex: 1;
   -webkit-box-flex: 1;
@@ -591,82 +616,43 @@ html.ios section#toolbar .toolbar-right-item {
   padding-right: 3px;
   visibility: hidden;
 }
-html.ios section#toolbar .toolbar-right-item a:link,
-html.ios section#toolbar .toolbar-right-item a:visited,
-html.ios section#toolbar .toolbar-right-item a:hover {
+html.ios section#toolbar #toolbar-right-item a:link,
+html.ios section#toolbar #toolbar-right-item a:visited,
+html.ios section#toolbar #toolbar-right-item a:hover {
   text-decoration: none;
   color: #006eef;
 }
 html.ios section#tabbar {
-  position: absolute;
-  bottom: 0;
-  width: 320px;
-  /* TODO */
-  background-color: #cccccc;
+  margin: 0;
+  padding: 0;
 }
-html.ios section#tabbar ul {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  /*display: -webkit-flex; */
-  display: flex;
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-html.ios section#tabbar li {
-  border: solid 1px #aaaaaa;
-  -moz-box-flex: 1;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  /*box-flex: @ratio;*/
-  flex: 1;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  /*display: -webkit-flex; */
-  display: flex;
-  -webkit-box-pack: center;
-  -moz-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
+html.ios section#tabbar div {
+  width: 64px;
   font-size: 0.8em;
-  height: 30px;
-  border-right: none;
+  height: 50px;
+  margin: 0 0 0 0;
+  padding: 0;
+  float: left;
+  text-align: center;
+  line-height: 85px;
+  color: #b0b0b0;
 }
-html.ios section#tabbar li:last-child {
-  border: solid 1px #aaaaaa;
+html.ios section#tabbar div.icon1 {
+  background: white url(images/tab-bar-icons.png) no-repeat -12px -35px;
 }
-html.ios section#tabbar li.selected {
-  background-color: #e6e6e6;
+html.ios section#tabbar div.icon1.selected {
+  background: white url(images/tab-bar-icons-active.png) no-repeat -12px -35px;
 }
-html.ios section#tabbar a:link,
-html.ios section#tabbar a:visited,
-html.ios section#tabbar a:hover {
-  text-decoration: none;
-  color: black;
-  font-size: 0.8em;
-}
-html.ios div.list-view article {
-  border-bottom: solid 1px #a5a5a5;
-  height: 36px;
-  background-color: white;
-}
-html.ios div.list-view article h1 {
-  font-size: 0.9em;
+html.ios section#tabbar div.selected {
+  color: #007aff;
 }
 html.ios div.menu article {
   height: 42px;
-  border-bottom: solid 1px #e5e5e5;
-  background-color: #fff;
+  border: solid 1px #aaaaaa;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  background-color: white;
 }
 html.ios div.menu article > div {
   /*width:100%;*/
@@ -684,5 +670,5 @@ html.ios div.menu article > div {
   padding-left: 15px;
 }
 html.ios div.menu article > div.nav {
-  background: #ffffff url(images/ios/right.svg) no-repeat right 50%;
+  background: white url(images/ios/right.svg) no-repeat right 50%;
 }

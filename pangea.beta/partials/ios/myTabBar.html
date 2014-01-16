@@ -1,0 +1,3 @@
+<section id="tabbar">
+		<div ng-repeat="tab in navigation.tabs" ng-class="(navigation.tabIndex == $index) ? 'selected {{tab.icon}}' : '{{tab.icon}}'" ng-click="onTabSelected($index)">{{tab.title}}</div>
+</section>
